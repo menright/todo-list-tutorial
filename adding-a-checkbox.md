@@ -62,9 +62,24 @@ The 'first' and 'second' class will be applied to the element because they are g
 Let's wrap the item title in a `<span>`, then use NgClass to apply the styling:
 
 ```markup
-<span class="todo-title" [ngClass]="{'todo-complete': isComplete}">
+<span class="todo-title" [ngClass]="{'todo-complete': completed}">
   {{ item.title }}
 </span>
+```
+
+We now need to handle the emitted event.  The list-manager currently handles 'remove' events, but doesn't yet handle 'update' events.  We can add the following to list-manager.component.html to handle the update event, which contains an item and changes:
+
+```markup
+ <todo-item [todoItem]="item"  
+      (update)="updateItem($event.item, $event.changes)" 
+      (remove)="removeItem($event)"></todo-item>
+```
+
+We should now add a function to the component that calls the service with the event parameters in our list-manager.component.ts file:
+```markup
+  updateItem(item, changes) {
+    this.todoList = this.todoListService.updateItem(item, changes);
+  }
 ```
 
 And finally, add the CSS to our `item.component.css` file:
